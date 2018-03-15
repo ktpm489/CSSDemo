@@ -39,3 +39,41 @@ ul.topnav li a:hover{
     background-color: #0080ff;
     color: #fff
 }
+ul.topnav li.dropdownIcon {
+    display : none
+}
+
+
+/*####### Mobile ############*/
+@media screen and (max-width: 680px) {
+    ul.topnav li:not(:nth-child(1)) {
+        display: none;
+    }
+    
+    ul.topnav li.dropdownIcon {
+        display :block;
+        float: right;
+    }
+    
+    ul.topnav.responsive li.dropdownIcon {
+        /** gan vi tri co dinh **/
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+    ul.topnav.responsive {
+         position: relative;
+    }
+    ul.topnav.responsive li {
+        /* Hien thi tat ca trong 1 dong duy nhat
+        display: block - a line break before and after the element
+        display: inline - no line break before or after the element
+        */
+        display: inline;
+        float: none;
+    }
+    ul.topnav.responsive li a {
+        display: block;
+        text-align: left;
+    }
+}
