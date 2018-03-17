@@ -1,0 +1,223 @@
++ Metacharacter in Regular Expressions
+\/*+-{}[]^$|?():!
+ex: 
+
+/c.t/  -> cut, cat
+
++ Escaping Metacharacters use \
+/1.12/ will use /1\.12/
+ex : 1.12 -> match , 1212 not match
+
++ Use literal backslash use \\ 
++ Forward Slashes must be escaped. If they are not escaped they act like the end of the regular
+
+\/ -> Match /
+\\ -> Match \
+
++ Character Sets in Regular Expressions :  use in square braces show character sets which match any one of the several characters
+Order of characters do not matter. Character class only matches one character.
+Ex /d[ar]y/ matches day and dry and not match dey, dary
+
++ Wildcard metacharacter is also  a character set that contain all characters.
+
++ Character Ranges
+ex [c-f] match all alphabets from c to f.
+[A-Za-z] matches all alphabets from A to Z, a to z, no space
+
++ Negative Character sets
+ex: [^0-9] : matches all letters except numbers
+ex: /bea[^tr]/ matches bean  but not match beat ,bear but not match bea because character sets are requires match one character
+
++ Metacharacters inside Character sets
+Metacharactes do not need to be escapse inside character sets because they are already escaped.
+
+/b[iao.xyz]t/ matches bit, bat,bot, b.t not match bst.
+
+These metacharacters needs to be escaped.
+[ - ^ \ / 
+Open bracket does not need to be escaped.
+Closing bracket needs to be escaped.
+
+Ex: /code[[(][0-9][\])]/ matches code(9) code[8) code[9]
+/2017[-\/]05[-\/]04/ match
+2017-05-04 2017/05/04
+
+ex: /any[1\-\\_]/  matches any1,any-, any_ ,any\
+
+
+Shorthand Character Sets
++--+--+--+--+--+
+| Shorthand |  Meaning     | Equivalent |
++--+--+--+--+--+
+| \d        | 	Digit	    | [0-9]      | 
++--+--+--+--+--+
++--+--+--+--+--+
+| \w        | Word Character|  [A-Za-z0-9_]     | 
++--+--+--+--+--+
++--+--+--+--+--+
+| \s       | 	Whitespace		|    [\t\r\n]     | 
++--+--+--+--+--+
++--+--+--+--+--+
+| \D       |  Not a Digit		|  [^0-9]       | 
++--+--+--+--+--+
++--+--+--+--+--+
+| \W        | Not a word character |  [^A-Za-z0-9_]   | 
++--+--+--+--+--+
++--+--+--+--+--+
+| \S        | Not a Whitespace			|    [^\t\r\n]         | 
++--+--+--+--+--+
+
+/\w\w\w/ matches Xyz, p_2,1_Q.
+/\s/ matches spaces but also tabs and line
+/\w\-\\/ matches word character  or hyphen or backslash
+/\w\s/ matches any word character or whitespace character.
+/[^\d\s]/ is not the same as /[\D\S]/
+/[^\d\s]/ means neither a digit nor a space character
+/[\D\S]/ means etiher not a digit or not a space character.
+It will match numbers and spaces also.
+
+
++ POSIX Bracket Expressions
+
+Class      || Meaning                  || Equivalent
+[:alpha:]  || Alphabetic characters    || A-Za-z
+[:digit:]  || Numeric Characters       || 0-9
+[:alnum:]  || Alphanumeric characters  || A-Za-z0-9
+[:lower:]  || Lowersace alphabets      || a-z
+[:upper:]  || Uppercase alphabets      || A-Z
+[:punct:]  || Punctuation characters   || 
+[:space:]  || Space characters         || \s
+[:blank:]  || Blank characters         ||
+[:print:]  || Printable characters and spaces 
+[:graph:]  || Printable Characters but no spaces
+[:cntrol:] || COntrol Character(non-pritable)
+[:xdigit:] || Hexadecimal character     || A-Fa-f0-9
+
+POSIX Bracket Expressions : use inside a character class , can't be used standaonn/
+Correct [[:graph:]] or [^[:xdigit:]]
+Support : Perl, PHP ,Ruby ,UNIX Tools
+Not Supported : Java, Javascript, .NET and python
+
+
+----Repetition Expressions --------------
+
+ * : Matches preceding item zero or more times
+ + : Matches preceding item one or more times
+ ? : Matches preceding item zero or one times
+ 
+ ---- Quantified Repetition--------
+ { }  Start, end quantified repetition
+ { min, max} min must be 0, max is optional.
+ ex : /\w{2,7}/ matches words with 2 to 7 letters
+ /\w{2}/ matches words with exactly two letters
+ /\w{2,}/ matches words with 2 or more letters
+ 
+ -------------Greedy and lazy expressions----------
+ ? : makes preceding quantifier lazy
+ 
+ ex:
+ *? : lazy star
+ *+ : lazy plus
+ {min,max}?
+ ??
+ 
+Greedy stategy matches as much as possible.
+Lazy stategy matches as less as possible/
+/codes??/ matches code but not codes.
+/codes??a/ matches codes because regex engines are eager to retun a result
+
+/\w*?\d{3}/ match 123, abc123
+/.+,.+/g
+---Grouping Metacharacters 
+begin ( end with )
+Can't be use into character class
+
+ex:
+/(xyz)+/ : xyz, and xyzxyzxyz
+/(im)?possible/ matches possible and impossible
+
+------Alternation Metacharacter----
+| : Match previous or next expression
+ex: laptop|deskop 
+ex hack(ing|ed)  , /hacking|ed/
+----Repeating----
+/(XX|YY|ZZ){4}/
+
+XXYYZZXX , XXXXXXXX
+/(call(battle|need) impossible (mission)?| web (development| design|mock-up))/
+
++ Start and end anchors
+^ : start quantified repetition of preceding item
+$ : end quantfied repetition of preceding item
+\A : start of  string ,but never the end of line 
+\Z : end of string ,but never the end of line
+
+ex : /^call/ or /\Acall/ start of string.
+/call$/ or /call\Z/  end of string .
+/^call$/ or /\Acall\Z/ match call if string is call
+ 
+^ and $ are supported all regex engines
+\A \Z are not supported in Java ,Perl ,PHP ,Python ,Ruby , not supported in Javascript.
+
++ Word boundaries:
+\b :Word boundary (start/end of a word)
+\B : not a word boundary
+ex:/\b\w+\b/ : author_0123, fifty_fitfy
+
+A spacce is not a word character .
+Word boundary is not an actually character ,just reference a position
+
+String learning and passion  do not match
+/learning \band\b passion/ but match 
+/learning\b and \bpassion/
+
++ Back references
+Refer backreferences with backslash follow eith a numbers
+ex: \1 ,\2
+
+/(call)\1/ match call for call
+/(work)(hard)(success)\2\1\3/ matches wordhardsuccesshardworksuccess
+/<(b|p)>.+<\/\1>/ matches
+<p> This is a paragraph </p> 
+but do not match 
+<p>This is a mixture </b>
+
++ Non-capturing Group Expresssions
+?: Specify a non-capturing group
+ex: /(?:[a-z]+)\1/g
+------------Positive lookahead assertions-----------
+/(?=working)work/ -> match work in working , not match worked
+/work(?=ing)/ matches work if it is following  by ing
+
+
+/(^[6-9\-]+$/ matches  978-967-8687
+/(?=^[6-9\-]+$)\d{3}-d{3}-d{4}/ ,atches 987-967-8698
+---------Negative lookahead assertions-----------
+?! : negative look ahead assertions
+/web(?!development)/ : it matches web design , not matches web development.
+---------Look behind assertions------------------
+?<=  Positive Lookbehind Assertions.
+?<!  Negative Lookbehind Assertions.
+
+example:
+/(?<=call)duty/ matches duty in callduty but not badduty.
+/(?<!call)duty/ matches duty in badduty but not callduty.
+Supported : .NET,Java, Perl, PHP ,Python ,Ruby 1.9
+Not supported : Javascript, Ruby 1.8, UNIX
+
+---------Unicodes in Regular Expresions----------
+\u followed by four digit  hexadecimal numbers
+ex: /rifl\u0069/ matches rifle' not fifle
+Java, JavaScript,. NET ,python and ruby
+Perl, PHP use \x instead of \u
+Unicode wildcard character is only supported in PHP and Perl
+\p{property} .It matches all character that has property
+
+Metacharacter ||  Abbreviation
+Letter 				L
+Mark				Mark
+Separator 			Z
+Symbol 				S
+Number				N
+Punctuation         P
+Other 				C
